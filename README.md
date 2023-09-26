@@ -17,4 +17,4 @@ The MicroPython code for the demonstrations are found in the demo folder. There 
    1. sht3x.py: the driver for the SHT30.
    2. sht3xTest.py: demonstrates the sht3x features
 
-The sht3x driver is already included in the MicroPython firmware I use and can therefore accessed without further actions. The other drivers must be made availabe to the system by copying them into the /lib folder of the MicroPython file system.
+The sht3x driver is already included in the MicroPython firmware I use and can therefore be accessed without further actions. The other drivers must be made availabe to the system by copying them into the /lib folder of the MicroPython file system.
