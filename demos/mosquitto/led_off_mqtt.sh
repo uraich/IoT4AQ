@@ -1,1 +1,1 @@
-mosquitto_pub -u ais2023 -P johannesburg -t AIS2023 -m "LED off"
+mosquitto_pub -u iot4aq -P seminar2023 -t IoT4AQ -m "LED off"

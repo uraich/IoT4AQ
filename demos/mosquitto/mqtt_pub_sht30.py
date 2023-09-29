@@ -6,10 +6,10 @@ from wifi_connect import *
 from sht3x import SHT3X,SHT3XError
 
 # Test reception e.g. with:
-# mosquitto_sub -t AIS2022
+# mosquitto_sub -u iot4aq -P seminar2023 -t IoT4AQ
 
 SERVER="192.168.0.20"
-TOPIC="AIS2023"
+TOPIC="IoT4AQ"
 # connect to the SHT30
 try:
     sht30 = SHT3X()
@@ -22,7 +22,7 @@ except SHT3XError as exception:
      
 connect()
 print("Connected, starting MQTTClient")
-c = MQTTClient("umqtt_client", SERVER,user="ais2023",password="johannesburg")
+c = MQTTClient("umqtt_client", SERVER,user="iot4aq",password="seminar2023")
 
 try:
     c.connect()
