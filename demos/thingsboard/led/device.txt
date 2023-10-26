@@ -1,0 +1,2 @@
+device id: 84a09a20-5a08-11ee-96ec-6b6984f0d60c
+access token: Px3DCnkuK6g86MNPbgwc

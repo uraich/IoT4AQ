@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Temperature, humidity and dust concentration</title>
+    <style>
+      table, th, td {
+  	  border: 1px solid black;
+  	  padding: 5px;
+      }
+      table {
+  	  border-spacing: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Temperature, humidity and dust concentration</h1>
+    This page is constantly updated using server side events
+    A message is sent, containing all the measurement values,
+    which is parsed and the values added to the table by a simple
+    JavaScript program.<br>
+    Copyright (c) U. Raich, Oct 2023<br>
+    Written for the <b>Seminar - Air Quality and IoT-based Air Sensors</b><br>
+    Released under the MIT License<br>
+    
+    <table>
+      <tr>
+	<th align="left">measurement</th>
+	<th align="left">value</th>
+	<th align="left">timestamp</th>
+      </tr> 
+      <tr>
+	<td>temperature:</td>
+	<td id="temp">temperature</td>
+	<td id="timeStamp">taken at: timeStamp</td>
+      </tr>
+      <tr>
+	<td>humidity:</td>
+	<td id="humi">humidity</td>
+      </tr>
+      <tr>
+	<td>pm 1.0:</td>
+	<td id="pm_1_0">pm_1_0</td>
+      <tr>
+	<td>pm 2.5:</td>
+	<td id="pm_2_5">pm_2_5</td>
+      <tr>
+	<td>pm 10:</td>
+	<td id="pm_10">pm_10</td>
+      </tr>
+    </table>
+    <br>
+    <div>
+      <p id="measText">Measurement</p>
+    </div>
+
+<script>
+  var source = new EventSource("events");
+  source.onmessage = function(event) {
+      var meas = event.data;
+      document.getElementById("measText").innerHTML = meas;
+      var measArray=meas.split(",");
+		  
+      var tempArray=measArray[0].split("=");
+      document.getElementById("temp").innerHTML = tempArray[1];
+	  
+      var humiArray=measArray[1].split("=");
+      document.getElementById("humi").innerHTML = humiArray[1];
+
+      var pm_1_0_Array=measArray[2].split("=")
+       document.getElementById("pm_1_0").innerHTML = pm_1_0_Array[1];
+	  
+      var pm_2_5_Array=measArray[3].split("=")
+       document.getElementById("pm_2_5").innerHTML = pm_2_5_Array[1];
+	  
+      var pm_10_Array=measArray[4].split("=")
+       document.getElementById("pm_10").innerHTML = pm_10_Array[1];
+	  
+      var timeStampArray=measArray[5].split("=");
+      document.getElementById("timeStamp").innerHTML = timeStampArray[1];
+      
+  }
+  source.onerror = function(error) {
+      console.log(error);
+      document.getElementById("measText").innerHTML = "EventSource error:" + error;
+  }
+  </script>
+</body>
+
+</html>

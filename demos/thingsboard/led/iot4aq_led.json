@@ -1,0 +1,194 @@
+{
+  "title": "IoT4AQ_LED",
+  "image": null,
+  "mobileHide": false,
+  "mobileOrder": null,
+  "configuration": {
+    "description": "A dash board controlling the user LED",
+    "widgets": {
+      "b6e64516-ea2e-c27b-f984-dc3df956d316": {
+        "typeFullFqn": "system.control_widgets.round_switch",
+        "type": "rpc",
+        "sizeX": 2.5,
+        "sizeY": 2,
+        "config": {
+          "targetDeviceAliases": [],
+          "showTitle": false,
+          "backgroundColor": "#e6e7e8",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "requestTimeout": 500,
+            "initialValue": false,
+            "getValueMethod": "getValue",
+            "setValueMethod": "setValue",
+            "title": "Round switch",
+            "retrieveValueMethod": "rpc",
+            "valueKey": "value",
+            "parseValueFunction": "return data ? true : false;",
+            "convertValueFunction": "return value;"
+          },
+          "title": "Round switch",
+          "dropShadow": true,
+          "enableFullscreen": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "useDashboardTimewindow": true,
+          "showLegend": false,
+          "actions": {},
+          "decimals": 2,
+          "datasources": [],
+          "targetDeviceAliasIds": [
+            "abfe58a9-78ec-95e0-afc4-f177eb362c18"
+          ]
+        },
+        "row": 0,
+        "col": 0,
+        "id": "b6e64516-ea2e-c27b-f984-dc3df956d316"
+      },
+      "6d30590b-a43b-50f9-123f-48cfe614e528": {
+        "typeFullFqn": "system.control_widgets.led_indicator",
+        "type": "rpc",
+        "sizeX": 2.5,
+        "sizeY": 2.5,
+        "config": {
+          "targetDeviceAliases": [],
+          "showTitle": false,
+          "backgroundColor": "#e6e7e8",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "title": "Led indicator",
+            "ledColor": "#3539AE",
+            "initialValue": true,
+            "performCheckStatus": false,
+            "retrieveValueMethod": "timeseries",
+            "valueAttribute": "value",
+            "parseValueFunction": "return data ? true : false;"
+          },
+          "title": "Led indicator",
+          "dropShadow": true,
+          "enableFullscreen": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "useDashboardTimewindow": true,
+          "showLegend": false,
+          "actions": {},
+          "decimals": 2,
+          "datasources": [],
+          "targetDeviceAliasIds": [
+            "abfe58a9-78ec-95e0-afc4-f177eb362c18"
+          ]
+        },
+        "row": 0,
+        "col": 0,
+        "id": "6d30590b-a43b-50f9-123f-48cfe614e528"
+      }
+    },
+    "states": {
+      "default": {
+        "name": "IoT4AQ_LED",
+        "root": true,
+        "layouts": {
+          "main": {
+            "widgets": {
+              "b6e64516-ea2e-c27b-f984-dc3df956d316": {
+                "sizeX": 2,
+                "sizeY": 2,
+                "row": 0,
+                "col": 0
+              },
+              "6d30590b-a43b-50f9-123f-48cfe614e528": {
+                "sizeX": 2,
+                "sizeY": 2,
+                "row": 2,
+                "col": 0
+              }
+            },
+            "gridSettings": {
+              "backgroundColor": "#eeeeee",
+              "columns": 24,
+              "margin": 10,
+              "outerMargin": true,
+              "backgroundSizeMode": "100%"
+            }
+          }
+        }
+      }
+    },
+    "entityAliases": {
+      "abfe58a9-78ec-95e0-afc4-f177eb362c18": {
+        "id": "abfe58a9-78ec-95e0-afc4-f177eb362c18",
+        "alias": "esp32_led",
+        "filter": {
+          "type": "singleEntity",
+          "resolveMultiple": false,
+          "singleEntity": {
+            "entityType": "DEVICE",
+            "id": "84a09a20-5a08-11ee-96ec-6b6984f0d60c"
+          }
+        }
+      },
+      "fc6c74a6-afa2-20ce-c053-002870853618": {
+        "id": "fc6c74a6-afa2-20ce-c053-002870853618",
+        "alias": "esp32_led_display",
+        "filter": {
+          "type": "singleEntity",
+          "resolveMultiple": false,
+          "singleEntity": {
+            "entityType": "DEVICE",
+            "id": "84a09a20-5a08-11ee-96ec-6b6984f0d60c"
+          }
+        }
+      }
+    },
+    "filters": {},
+    "timewindow": {
+      "displayValue": "",
+      "hideInterval": false,
+      "hideLastInterval": false,
+      "hideQuickInterval": false,
+      "hideAggregation": false,
+      "hideAggInterval": false,
+      "hideTimezone": false,
+      "selectedTab": 0,
+      "realtime": {
+        "realtimeType": 0,
+        "interval": 1000,
+        "timewindowMs": 60000,
+        "quickInterval": "CURRENT_DAY"
+      },
+      "history": {
+        "historyType": 0,
+        "interval": 1000,
+        "timewindowMs": 60000,
+        "fixedTimewindow": {
+          "startTimeMs": 1698224295724,
+          "endTimeMs": 1698310695724
+        },
+        "quickInterval": "CURRENT_DAY"
+      },
+      "aggregation": {
+        "type": "AVG",
+        "limit": 25000
+      }
+    },
+    "settings": {
+      "stateControllerId": "entity",
+      "showTitle": false,
+      "showDashboardsSelect": true,
+      "showEntitiesSelect": true,
+      "showDashboardTimewindow": true,
+      "showDashboardExport": true,
+      "toolbarAlwaysOpen": true
+    }
+  },
+  "externalId": null,
+  "name": "IoT4AQ_LED"
+}

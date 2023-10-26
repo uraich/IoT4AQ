@@ -18,7 +18,7 @@ from sht3x import SHT3X,SHT3XError
 # import the SGP30 class
 import sgp30
 
-BROKER="192.168.0.20"
+BROKER="192.168.0.36"
 PORT="1885"
 ACCESS_TOKEN="Bi2PyeEVu9u4fu3x8ECX"
 TOPIC="v1/devices/me/telemetry"
