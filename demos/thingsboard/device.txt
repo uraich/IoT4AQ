@@ -1,0 +1,2 @@
+device id: f5bbcbe0-595d-11ee-a28f-6b0b3444f116
+access token: jLSpHb7QzZUWyjKkHVtF
