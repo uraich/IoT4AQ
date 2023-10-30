@@ -6,7 +6,7 @@ This repository contains slides of a tutorial on the Internet of Things in gener
 The slides are available as LibreOffice odp documents as well as PDF files.
 
 The MicroPython code for the demonstrations are found in the demo folder. There are drivers for the following sensors with small test programs making use of them:
-1. in the led folder: You find the emdedd sytems _hello world_ program blink.py, which blinks the user LED on the ESP32 CPU board
+1. led: You find the emdedded sytems _hello world_ program blink.py, which blinks the user LED on the ESP32 CPU board
 2. in the plantower folder:
    1. pms5003.py is the driver for the PlanTower PMS5003 dust sensor
    2. plantowerDemo.py shows how to use it
