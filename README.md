@@ -24,4 +24,6 @@ The MicroPython code for the all demonstrations shown during the presentation ar
 9. thingsboard: ThingsBoard is an IoT application that can be installed on a local PC or run in the cloud. It provides a dash board with widgets showing results from measurements, which have been communicated to it through a MQTT protocol (or HTTP). An example is available, collecting temperature and humidity data from a SHT30, eCO2 and TVOC data from a SGP30 and dust concentration from a PlanTower dust sensor and displaying the result on graphs. A second dash board controlling the user LED on the CPU board through ThnigsBoard widgets is provided.
 
 The sht3x driver is already included in the MicroPython firmware I use and can therefore be accessed without further actions. The other drivers must be made availabe to the system by copying them into the /lib folder of the MicroPython file system.
-## This is work in progress and will not be finished before November 2023 ##
+
+# The IoT4AQ hands-on workshop
+During this workshop a simple but fully functional IoT system for air quality measurements is developed. First the individual components are presented and small readout and control programs are developed for them. Finally these code pieces are assembled into a fully functional system.
