@@ -4,52 +4,44 @@
 #define WIRE Wire
 
 void setup() {
+  char txt_buf[3]; // 2 hex characters + the ending 0
+  byte error,address;
   WIRE.begin();
 
-  Serial.begin(11500);
+  Serial.begin(115200);
   while (!Serial)
      delay(10);
-  Serial.println("\nI2C Scanner");
-}
+  Serial.print("\nI2C Scanner on SCL: ");
+  Serial.print(SCL);
+  Serial.print(" and SDA: ");
+  Serial.println(SDA);
+  Serial.println("Copyright (c) U. Raich");
+  Serial.println("Program written for the IoT4AQ workshop at the");
+  Serial.println("University Alioune Diop, Bambey, Sénégal 2024");
+  Serial.println("This program is released under the MIT license\n");
+  Serial.println("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f");
 
-
-void loop() {
-  byte error, address;
-  int nDevices;
-
-  Serial.println("Scanning...");
-
-  nDevices = 0;
-  for(address = 1; address < 127; address++ )
-  {
-    // The i2c_scanner uses the return value of
-    // the Write.endTransmisstion to see if
-    // a device did acknowledge to the address.
-    WIRE.beginTransmission(address);
-    error = WIRE.endTransmission();
-
-    if (error == 0)
-    {
-      Serial.print("I2C device found at address 0x");
-      if (address<16)
-        Serial.print("0");
-      Serial.print(address,HEX);
-      Serial.println("  !");
-
-      nDevices++;
+  for (int i=0; i<8; i++) {
+    sprintf(txt_buf,"%02x",i*16);
+    Serial.print(txt_buf);
+    Serial.print(": ");
+    for (int j=0; j<16; j++) {
+      address = i*16 + j;
+      WIRE.beginTransmission(address);
+      error = WIRE.endTransmission();
+      if (!error) {
+        sprintf(txt_buf,"%02x",address);
+        Serial.print(txt_buf);
+        Serial.print(" ");
+      }
+      else 
+        Serial.print("-- ");
     }
-    else if (error==4)
-    {
-      Serial.print("Unknown error at address 0x");
-      if (address<16)
-        Serial.print("0");
-      Serial.println(address,HEX);
-    }
+    Serial.println("");
+
   }
-  if (nDevices == 0)
-    Serial.println("No I2C devices found\n");
-  else
-    Serial.println("done\n");
 
-  delay(5000);           // wait 5 seconds for next scan
 }
+
+
+void loop() {}
