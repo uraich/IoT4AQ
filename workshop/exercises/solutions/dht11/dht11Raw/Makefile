@@ -1,4 +1,4 @@
-all: evaluate
+all: results2plot
 
 clean:
-	$(RM) evaluate, *~,*.o
+	$(RM) results2plot, *~,*.o
