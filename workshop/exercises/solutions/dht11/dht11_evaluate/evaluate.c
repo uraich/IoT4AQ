@@ -15,6 +15,7 @@
 // If you want to follow the code in detail, just uncomment them
 
 #include <stdio.h>
+#include <stdlib.h>
 
 // expects a pointer to the beginning of the bit buffer
 // skips the start signal advancing the pointer until the signal goes
@@ -69,7 +70,12 @@ int main(int argc, char **argv) {
   unsigned char checksum,chs;
   
   // read the plot file
-  fp = fopen("plotfile.txt","r");
+
+  if ((fp = fopen("plotfile.txt","r")) == NULL) {
+    printf("The program expects a text file with 32*32=1024 zero or one values\n");
+    printf("named \"plotfile.txt\". This file was not found!\n");
+    exit(-1);
+  }
   bufPtr = buf;
   for (i=0;i<1024;i++) {
     fscanf(fp,"%d",(int *)bufPtr);

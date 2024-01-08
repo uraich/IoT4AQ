@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
   /* read the result file */
@@ -10,7 +11,11 @@ int main(int argc, char **argv) {
   uint32_t tmp;
   buf = dht11Results;
   
-  fp = fopen("result.txt","r");
+  if ((fp = fopen("result.txt","r")) == NULL) {
+      printf("The program expects an input text file named \"result.txt\" \n");
+      printf("with 32x32 hex values, which was not found\n");
+      exit(-1);
+    }
   for (i=0;i<32;i++) {
     fscanf(fp,"%x",buf);
     buf++;
