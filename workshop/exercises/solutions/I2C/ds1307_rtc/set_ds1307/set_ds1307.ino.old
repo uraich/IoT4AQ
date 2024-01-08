@@ -9,7 +9,7 @@
 #include <NTPClient.h>
 
 #include "RTClib.h"
-rtc_ds1307 RTC;     // Setup an instance of DS1307 RTC class
+RTC_DS1307 rtc;     // Setup an instance of DS1307 RTC class
 
 const char *ssid     = "WLAN18074253";
 const char *password = "Q4k6V35sFauw";
