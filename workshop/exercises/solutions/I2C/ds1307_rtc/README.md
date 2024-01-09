@@ -7,5 +7,6 @@ This folder contains programs that access the ds1307 RTC without passing through
 * set_ds1307_manual: You may define time and date in the format
 
 "17:36:25 Tue, Jan 09 2024"
+
 The string is parsed and the ds1307 time registers set correspondingly
 * read_ds1307_date_time: Reads the ds1307 registers and prints their contents
