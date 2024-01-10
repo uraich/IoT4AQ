@@ -18,8 +18,8 @@
 #include <Wire.h>
 #include "time.h"
 
-const char* ssid     = "WLAN18074253";
-const char* password = "Q4k6V35sFauw";
+const char* ssid     = "your SSID";
+const char* password = "your WiFi password";
 
 const char* ntpServer = "pool.ntp.org";
 
