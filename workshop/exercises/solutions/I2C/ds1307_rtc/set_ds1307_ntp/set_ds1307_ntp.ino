@@ -69,10 +69,6 @@ void setup(){
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   
   // get the time from the ESP32 and set up the RTC
-  if(!getLocalTime(&timeinfo)){
-    Serial.println("Failed to obtain time");
-    return;
-  }
   if (!getLocalTime(&timeinfo)) {
     Serial.println("Failed to obtain time");
     while (true)
