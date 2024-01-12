@@ -15,8 +15,8 @@
 #include <RTClib.h>
 #include <ESP32Time.h>
 
-const char* ssid     = "WLAN18074253";
-const char* password = "Q4k6V35sFauw";
+const char* ssid     = "your SSID";
+const char* password = "your password";
 
 const char* ntpServer = "pool.ntp.org";
 
@@ -37,6 +37,10 @@ void setTimeNTP(void) {
 
   // check if WiFi is already connect and connect to it if not
   if (!(WiFi.status() == WL_CONNECTED)) {
+      if (ssid == "your SSID") {
+        Serial.println("Please setup your correct SSID first");
+        return;
+      }
       // Connect to Wi-Fi
       Serial.print("Connecting to ");
       Serial.println(ssid);
