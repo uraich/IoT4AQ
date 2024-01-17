@@ -1,5 +1,6 @@
 /**
- * writeFile.ino: writes simulated measurement data to a file on the SD card
+ * writeMeas.ino: reads the time stamp, DHT11 temperature and humidity and 
+ * writes the results to a file on the SD card
  * The file is a text file residing in a directory Iot4AQ/data 
  * and is named meas.txt
  * If the directories do not exist, they are created
@@ -17,10 +18,13 @@
 #include "SPI.h"
 #include <RTClib.h>
 #include <string.h>
+#include "setTimeNTP.h"
+#include <DHT11.h>
 
 #define EXISTS_AS_FILE -1
 #define DOES_NOT_EXIST  0
 #define EXISTS_AS_DIR   1
+#define DHT11_DATALINE  16
 
 int exists(fs::FS &fs, const char * dirname) {
   File root = fs.open(dirname);
@@ -51,17 +55,35 @@ int createDir(fs::FS &fs, const char * path){
 
 void setup(){
   FILE root;
-  char *measTxt = "Welcome the the IoT4AQ workshop\nIt is held at the Alioune Diop University Bambey (UADB), Sénégal, March 2024\n";
-
-  Serial.begin(115200);
-  if (!Serial)
-    delay(10);
+  RTC_DS1307 ds1307;
+  char measTxt[100];
   
+  Serial.begin(115200);
+  while (!Serial)
+    delay(10);
+
+  // check if ds1307 is connected and accessible
+  if (!ds1307.begin()) {
+    Serial.println("Could not find ds1307 on the I2C bus");
+    Serial.println("Please check the wiring");
+    while (true)
+      delay(100); // wait for correction and reset
+  }
+
+  setTimeNTP(); // set the date and time in the ESP32 RTC and the ds1307  
+
   if(!SD.begin()){
     Serial.println("Card Mount Failed");
     return;
   }
-
+  // make a measurement on the DHT11
+  // The way the DHT11 library is built, we have to wait 1s
+  // between temperature and humidity measurement
+  DHT11 dht11 = DHT11(DHT11_DATALINE);
+  int temperature = dht11.readTemperature();
+  delay(1000);
+  int humidity = dht11.readHumidity();
+  
   // check if /IoT4AQ exists and is a directory
   int retCode = exists(SD,"/IoT4AQ");
   if (retCode == DOES_NOT_EXIST) {
@@ -103,6 +125,12 @@ void setup(){
   else if (retCode == EXISTS_AS_DIR)
     Serial.println("/IoT4AQ/data exists and is a directory");
 
+  // here we create the time stamp and dummy measurement data
+  char timeFormat[] = "DDD DD.MMM YYYY hh:mm:ss";
+  char *timeStamp = ds1307.now().toString(timeFormat);
+  // Serial.print("Time stamp: ");
+  // Serial.println(timeStamp);
+
   // check if /IoT4AQ/data/meas.txt exists and is a normal file
   retCode = exists(SD,"/IoT4AQ/data/meas.txt");
   if (retCode == DOES_NOT_EXIST) {
@@ -115,9 +143,12 @@ void setup(){
         delay(100);
     }
     else {
+      measFile.print(timeStamp);
+      sprintf(measTxt,", Temperature: %d°C, Humidity: %d%%\n",temperature,humidity);
       measFile.print(measTxt);
+      Serial.print(timeStamp);
       Serial.print(measTxt);
-      Serial.println(" written to new file /IoT4AQ/data/meas.txt");
+      Serial.println("written to new file /IoT4AQ/data/meas.txt");
       measFile.close();
     }
   }
@@ -135,9 +166,12 @@ void setup(){
         delay(100);
     }
     else {
+      measFile.print(timeStamp);
+      sprintf(measTxt,", Temperature: %d°C, Humidity: %d%%\n",temperature,humidity);
       measFile.print(measTxt);
+      Serial.print(timeStamp);
       Serial.print(measTxt);
-      Serial.println(" appended to file /IoT4AQ/data/meas.txt");
+      Serial.println("appended to file /IoT4AQ/data/meas.txt");
       measFile.close();
     }
   }

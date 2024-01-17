@@ -16,7 +16,7 @@
 // - For ESP32: On my WeMos D1 mini ESP32 board the DHT11 data line is connected to GPIO 22
 // - For ESP8266: Connect the sensor to GPIO2 or D4.
 
-#define DHT11_DATALINE 22
+#define DHT11_DATALINE 16
 
 DHT11 dht11(DHT11_DATALINE);
 

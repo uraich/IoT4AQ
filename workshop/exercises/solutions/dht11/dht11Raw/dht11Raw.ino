@@ -5,7 +5,7 @@
 // This makes the LED blink the SOS morse code
 // The program is part of the workshop on IoT4AQ at Alioune Diop University, Bambey, Sénégal
 
-#define DATA_LINE 22
+#define DATA_LINE 16
 
 void setup() {
   unsigned int dht11RawData[32];
