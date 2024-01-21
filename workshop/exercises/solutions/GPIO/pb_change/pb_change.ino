@@ -22,7 +22,7 @@ void setup() {
   while (!Serial)
     delay(10);          // wait for the serial port to become available
   // initialize digital pin for the PUSHBUTTON as an input.
-  pinMode(PUSH_BUTTON, INPUT);
+  pinMode(PUSH_BUTTON, INPUT_PULLUP);
   old_state = digitalRead(PUSH_BUTTON);
   printState(old_state);    // print the state when the program is started
 }
