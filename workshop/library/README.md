@@ -44,15 +44,15 @@ The PMS5003 dust sensor uses messages on a serial line at 9600 baud. It uses a 3
 following layout:
 
 | Byte number  | Meaning                                   | Value                           |
-|:------------:|:-----------------------------------------:|:-------------------------------:|
-| 0 .. 1       | Header                      		           | "BM"                            |
-| 2 .. 3       | Frame Length                		           | length = 2*13+2 (data+checksum) |
-| 4 .. 5       | PM1.0 concentration [ug/m3] 		           |                                 |
-| 6 .. 7       | PM2.5 concentration [ug/m3] 		           |                                 |
-| 8 .. 9       | PM10  concentration [ug/m3] 		           |                                 |
-| 10 .. 11     | PM1.0 under atmospheric     		           |                                 |
-| 12 .. 13     | PM2.5 pressure              		           |                                 |
-| 14 .. 15     | PM10                        		           |                                 |
+|--------------|:-----------------------------------------:|--------------------------------:|
+| 0 .. 1       | Header                      		   | "BM"                            |
+| 2 .. 3       | Frame Length                		   | length = 2*13+2 (data+checksum) |
+| 4 .. 5       | PM1.0 concentration [ug/m3] 		   |                                 |
+| 6 .. 7       | PM2.5 concentration [ug/m3] 		   |                                 |
+| 8 .. 9       | PM10  concentration [ug/m3] 		   |                                 |
+| 10 .. 11     | PM1.0 under atmospheric     		   |                                 |
+| 12 .. 13     | PM2.5 pressure              		   |                                 |
+| 14 .. 15     | PM10                        		   |                                 |
 | 16 .. 17     | no of particles above 0.3 um in 1L volume |                                 |
 | 18 .. 19     | no of particles above 0.5 um in 1L volume |                                 |
 | 20 .. 21     | no of particles above 1.0 um in 1L volume |                                 |
@@ -135,6 +135,16 @@ It is possible to get at the physical data by calling just a single function:
     
 ### Wiring Details
 
+The connections are made as follows:
+|PMS5003 pin number | PMS5003 pin significance | ESP32 GPIO pin number |
+|:-----------------:| :-----------------------:| :--------------------:|
+| Pin 1             | Vcc                      | 5V                    |
+| Pin 2             | GND                      | GND                   |
+| Pin 3             | Set (suspend mode)       | not used              |
+| Pin 4             | Rx                       | GPIO 17               |
+| Pin 5             | Tx                       | GPIO 16               |
+| Pin 6             | Reset                    | not used              |
+| Pin 7             | NC (not connected)       |                       |
 
 ## Examples
 
