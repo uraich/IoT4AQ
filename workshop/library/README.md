@@ -64,50 +64,22 @@ following layout:
 
 ### Internal Protocol Handling
 
-The library initiates the data request to the DHT11 sensor and then reads a 40-bit data stream in response. The data stream is parsed to obtain accurate temperature and humidity readings. The process of reading data from the DHT11 involves multiple steps:
+The library waits for a header "BM" to arrive on SERIAL2, the third UART on the ESP32 (UART2) which uses the pins GPIO 16
+Tx and GPIO 17 for Rx. After that it reads 30 bytes of raw data from the serial line. 
 
 ![](/assets/communication.png)
-**Source & Credit :** [Mouser DHT11 Datasheet](https://www.mouser.com/datasheet/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf)
+**Source & Credit :** [PMS5003 Datasheet](https://www.digikey.com/en/htmldatasheets/production/2903006/0/0/1/pms5003-series-manual)
 
-1. **Initialization and Request**: 
-    - The MCU (like an Arduino) sends a start signal by pulling the data line low for at least 18ms.
-    - The MCU then pulls the line high for 20-40us to indicate that it's ready to receive a response.
-
-2. **DHT11 Response**:
-    - Upon detecting the start signal from the MCU, the DHT11 sends a response signal.
-    - This response consists of a 80us low voltage level followed by an 80us high voltage level.
-
-3. **Data Transmission**:
-    - The DHT11 transmits its data in a series of pulses. Each bit of data is represented by a specific combination of high and low voltage durations.
-    - A '0' is represented by 50us of low voltage followed by 26-28us of high voltage.
-    - A '1' is represented by 50us of low voltage followed by 70us of high voltage.
-    - The DHT11 sends 40 bits of data in total: 16 bits for humidity, 16 bits for temperature, and 8 bits for checksum.
-    - The checksum is the last 8 bits of the sum of the first 32 bits. It's used to verify data integrity.
-
-4. **Data Interpretation**:
-    - After reading the 40 bits, the MCU processes the data to extract temperature and humidity values.
-    - The bits are grouped to form the integral and decimal parts of the temperature and humidity readings, though the DHT11 provides only integer values.
-  
-5. **Completion**:
-    - After data transmission, the DHT11 pulls the data line low for 50us, marking the end of the communication. The MCU then pulls the line high, putting the DHT11 in a low-power standby mode.
-
-This library abstracts these complexities, allowing users to easily read temperature and humidity values with simple function calls. Behind the scenes, it manages the signaling, data reading, and interpretation based on the DHT11's protocol.
-
+In addition to reading raw data, the library extracts physical data, combining 2 data bytes into 16 bit data words. It verifies the checksum
+and returns a data structure containing all the information extracted from the protocol 
 
 ## Features
 
 - **Easy to Use**: Easy to use interface for reading temperature and humidity from the DHT11 sensor.
 - **No External Dependencies**: The library is standalone and doesn't require any external libraries.
 - **Example Sketches**: The library package includes example Arduino sketches to get you started quickly.
-- **Error Handling**: The library package includes Error handling mechanisms to ensure robustness.
 
 ## Installation
-
-### Arduino IDE Library Manager
-1. Open the Arduino IDE.
-2. Go to `Sketch` > `Include Library` > `Manage Libraries...`.
-3. In the Library Manager, enter "DHT11" into the search box.
-4. Find the DHT11 library in the list and install it.
 
 ### Installing Manually from GitHub
 1. Download the latest release of the library from this GitHub repository as a ZIP file.
@@ -119,101 +91,77 @@ This library abstracts these complexities, allowing users to easily read tempera
 
 ### Basic Usage
 
-- Include the `DHT11.h` header file.
-- Create an instance of the DHT11 class, specifying the digital pin connected to the sensor's data pin.
-- Use `readTemperature()` and `readHumidity()` methods to read the data.
+- Include the `PMS5003.h` header file.
+- Create an instance of the PMS5003 class. The constructor takes no arguments.
+- The following methods are available:
 
-### New Methods in v2.0.0
+    uint8_t      *readRaw();
+    void         printRaw(uint8_t *);
+    void         printMsg(pms5003Data *);
+    pms5003Data  *evaluate(uint8_t *);
+    int          calcChecksum(uint8_t *);
+    int          readChecksum(uint8_t *);
+    bool         verifyChecksum(uint8_t *);
+    pms5003Data  readMeas();
+  
 
-- `getErrorString(int errorCode)`: Returns a human-readable error message based on the provided error code.
+readRaw returns a pointer to an array of 32 bytes. These are the data read from the PMS5003 protocol without any treatment
+The pointer to the raw data can be put into the evaluate method, which returns the following data structure, directly mapped onto the
+PMS5003 protocol:
 
+    typedef struct pms5003Data {
+      char header[2];
+      uint16_t framelength;
+      uint16_t pm1_0;       // data 1
+      uint16_t pm2_5;
+      uint16_t pm10;
+      uint16_t pm1_0_atm;   // data 4
+      uint16_t pm2_5_atm;
+      uint16_t pm10_atm;
+      uint16_t nb_0_3;      // data 7
+      uint16_t nb_0_5;
+      uint16_t nb_1;;
+      uint16_t nb_2_5;
+      uint16_t nb_5;
+      uint16_t nb_10;       // data 12
+      uint16_t reserved;
+      uint16_t checksum;
+    };
+
+It is possible to get at the physical data by calling just a single function:
+
+    PMS5003 pms5003 = PMS5003();             // create a PMS5003 object
+    pms5003Data result = pms5003.readMeas(); // verifies the checksum and returns the above data structure correctly filled
+    
 ### Wiring Details
 
-The DHT11 sensor has three or four pins, depending on the variant:
-
-- **VCC**: Connect to 3.3V or 5V on your MCU (based on your sensor's specification).
-- **Data**: Connect to a digital I/O pin on your MCU (not an analog pin). For the provided examples, we use digital pin 2 by default.
-- **Ground (GND)**: Connect to the ground of your MCU.
-- **NC (No Connect)**: Some variants have this pin. It is not used and can be left unconnected.
-
-Remember to use a pull-up resistor (typically 10kΩ) between the VCC and Data pins for reliable communication.
 
 ## Examples
 
 All examples provided use Arduino UNO's digital pin 2 as the default connection to the DHT11 sensor's data pin. Modify this in the code if using a different pin.
 
-- **[Read Humidity](examples/ReadHumidity/ReadHumidity.ino)**  
-  This example demonstrates how to simply read the humidity value from the DHT11 sensor and display it on the Arduino Serial Monitor. It's a basic introduction to using the library to get humidity data.
+- **[Read Raw Data](examples/pms5003Raw/pms5003Raw.ino)**  
+  This example demonstrates how to read the raw data from the PMS5003 and print them
 
-- **[Read Temperature and Humidity](examples/ReadTempAndHumidity/ReadTempAndHumidity.ino)**  
-  A more comprehensive example that shows how to read both temperature and humidity values from the DHT11 sensor. Results are displayed on the Arduino Serial Monitor, giving users a complete view of the environment.
+- **[Read a Measurment](examples/pms5003Simple/pms5002Simple.ino)**  
+  Reads a measurement into the pms5003Data structure. The individual fields pm1.0, pm2.5 ... number of particles in 1L volume can the easily be extracted.
 
-- **[Read Temperature](examples/ReadTemperature/ReadTemperature.ino)**  
-  Similar to the 'Read Humidity' example, but focused solely on reading and displaying the temperature value from the DHT11 sensor. It provides a straightforward way to monitor temperature using the library.
+- **[Read All](examples/pms5003All/pms5003All.ino)**  
+  Uses most, if not all of the PMS5003 methods
 
-- **[Read Plot](examples/ReadPlot/ReadPlot.ino)**  
-  A visually interactive example that uses the Arduino Serial Plotter to graphically display temperature and humidity data in real-time. This is perfect for those who want a visual representation and trend analysis of the sensor's readings.
 
 ## Error Handling
 
-The library provides clear error handling mechanisms. When reading data:
-
-- If there's a timeout while waiting for a response from the sensor, the methods `readTemperature()` and `readHumidity()` return the value `DHT11::ERROR_TIMEOUT`.
-- If there's a checksum mismatch indicating data corruption, the methods return the value `DHT11::ERROR_CHECKSUM`.
-
-For translating these error codes to human-readable strings, the library offers the `DHT11::getErrorString(int errorCode)` method.
+The library will print an error message if the checksum does not match. 
 
 ## Troubleshooting
 
-- **Sensor Not Responding or Constant Timeouts:**  
-  - Ensure the sensor receives the proper voltage (3.3V or 5V).
-  - Double-check the data pin connection to the Arduino board.
-  - Restart the Arduino IDE after any changes.
-  
-- **Checksum Errors:**  
-  - Ensure minimal distance between the sensor and the Arduino board.
-  - Check the surrounding environment for electrical noise sources.
-
-- **Inaccurate or Unstable Readings:**  
-  - Give the sensor time to stabilize after powering on.
-  - Position the sensor away from direct sources of temperature or humidity changes.
-
-- **Library Not Found in Arduino IDE:**  
-  - Confirm the library's correct installation.
-  - Restart the Arduino IDE.
-
-## FAQ
-
-1. **Is this library designed for the DHT22 sensor as well?**  
-   No. The library caters exclusively to the DHT11 sensor. The DHT22 uses a different data format, necessitating a separate library.
-
-2. **What's the recommended frequency for sensor readings?**  
-   It's best to allow at least 1 second between readings for accurate and stable results.
-
-3. **I'm experiencing persistent timeout errors. What can I do?**  
-   Ensure proper wiring, verify the sensor's power source, and check if the specified data pin in the Arduino code matches your hardware setup.
-
-4. **Has this library been tested on platforms other than the Arduino IDE?**  
-   While it's been primarily tested on the Arduino IDE and Arduino Uno R3 board, it might work on other platforms or boards. However, results may vary.
-
-5. **Is the library compatible with third-party platforms?**  
-   Although tailored for the Arduino IDE, the library might function on other platforms. Still, I don't guarantee compatibility or consistent outcomes on third-party platforms.
-
-## Compatibility
-
-The library has been tested and confirmed to work on the following boards:
-
-- Arduino Uno R3 (ATmega328P - AVR architecture)
-- NodeMCU ESP32S v1.1 **`ESP-WROOM-32`** (Tensilica Xtensa LX6 - xtensa architecture) `*`
-- NodeMCU ESP8266 v1.0 **`ESP8266MOD`** (Tensilica Xtensa LX106 - xtensa architecture) `*`
-
-`*` For xtensa-based boards (ESP32 and ESP8266), a delay is required between consecutive method calls for optimal performance. Check [Examples](/examples/) for the implementation details.
-
-Given the vast number of boards and architectures available, it's a challenge for a solo developer to test on all. Community contributions in terms of compatibility testing are highly encouraged.
+- **Sensor Not Responding:**
+  Your program may block if the wiring is wrong and the library does not see any data coming in on the serial line
 
 ### Contribute by Testing
 
-If you've successfully used this library on a board not listed above, please consider contributing by letting me know. This will help the community to have a broader understanding of the library's compatibility.
+If you've successfully used this library on a board, please consider contributing by letting me know. This will help the community to have a broader understanding of the library's compatibility.
 
 1. Fork the [repository](https://github.com/dhrubasaha08/DHT11).
 2. Update the README with the board you've tested.
@@ -224,10 +172,6 @@ Your contribution will be greatly appreciated, and it will benefit the entire Ar
 ## Contributing
 
 For guidelines on contributing to this project, please see the [`CONTRIBUTING.md`](CONTRIBUTING.md) file.
-
-## Code of Conduct
-
-To understand the community guidelines and expected behavior, please refer to the [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) file.
 
 ## License
 
