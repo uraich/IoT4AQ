@@ -156,8 +156,8 @@ All examples provided use Arduino UNO's digital pin 2 as the default connection 
 - **[Read a Measurment](examples/pms5003Simple/pms5002Simple.ino)**  
   Reads a measurement into the pms5003Data structure. The individual fields pm1.0, pm2.5 ... number of particles in 1L volume can the easily be extracted.
 
-- **[Read All](examples/pms5003All/pms5003All.ino)**  
-  Uses most, if not all of the PMS5003 methods
+- **[Read All](examples/pms5003Test/pms5003Test.ino)**  
+  Tests all PMS5003 methods
 
 
 ## Error Handling
