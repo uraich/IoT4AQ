@@ -24,7 +24,13 @@ LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD I2C address to 0x27
 #define DHT11_DATALINE 16
 
 DHT11 dht11(DHT11_DATALINE);       // create a DHT11 object
-PMS5003 pms5003 = PMS5003();       // create a PMS5003 object
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   I use Rx=34 and Tx=33 because otherwise the PMS5003 conflicts with the DHT11 onn my system
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+PMS5003 pms5003 = PMS5003(34,33);  // create a PMS5003 object
+
+// define the pixel layout of the degree character
+uint8_t deg[8]={0x2,0x5,0x2,0x0,0x0,0x0,0x0};
 
 void setup()
 {
@@ -36,13 +42,19 @@ void setup()
   lcd.backlight();
   // clear the LCD memory
   lcd.clear();
+
+   // create the degree character  
+  lcd.createChar(0, deg);
+  
   // set the cursor, the first parameter is the x position of the first character
   // to be written, the second one is the row number
   lcd.setCursor(0,0);
   // ... and print the message
-  lcd.print("Measurement results:");
+  lcd.print("Temperature:   ");
+  lcd.write(0); // this prints the degree character
+  lcd.print("C");
   lcd.setCursor(0,1);
-  lcd.print("Temp:    C Humi:   %");
+  lcd.print("Humidity:      %");
   lcd.setCursor(0,2);
   lcd.print("pm1.0:    pm2.5:    ");
   lcd.setCursor(0,3);
@@ -62,21 +74,50 @@ void loop()
   // reading the dust measurement will take ~ 1s
   // dustMeas = pms5003.readMeas();
   // read the humidity
+  delay(1000); // we have to wait for 1s in between measurements
   humidity    = dht11.readHumidity();
+
   // print the DHT measurement results into the result string
+  // first the temperature
   snprintf(valTxt,3,"%2d",temperature);
   Serial.print("Temperature: ");
   Serial.print(valTxt);
   Serial.println("°C");
-  lcd.setCursor(6,1);
+  lcd.setCursor(13,0);
   lcd.print(valTxt);
-  /*
-  lcd.setCursor(0,2);
-  snprintf(line,20,"pm1.0:  %04d, pm2.5: %02d",dustMeas.pm1_0,dustMeas.pm2_5);  
-  lcd.print(line);
-  lcd.setCursor(1,3);
-  snprintf(line,20,"pm10:  %04d",dustMeas.pm10);  
-  lcd.print(line);
-  */
+  
+  // then the humidity
+  snprintf(valTxt,3,"%2d",humidity);
+  lcd.setCursor(13,1);
+  lcd.print(valTxt);
+  Serial.print("Humidity:    ");
+  Serial.print(valTxt);
+  Serial.println("%");
+
+  // read the PMS5003
+  dustMeas = pms5003.readMeas();
+  // print pm1.0 to the display
+  snprintf(valTxt,5,"%3d",dustMeas.pm1_0);
+  Serial.print("pm 1.0: ");
+  Serial.print(valTxt);
+  lcd.setCursor(6,2);
+
+  lcd.print(valTxt);
+
+  // print pm2.5 to the display
+  snprintf(valTxt,5,"%3d",dustMeas.pm2_5);
+  Serial.print(", pm 2.5: ");
+  Serial.print(valTxt);
+  lcd.setCursor(16,2);
+  lcd.print(valTxt);
+
+ // print pm10 to the display
+  snprintf(valTxt,5,"%3d",dustMeas.pm10);
+  Serial.print(", pm 10: ");
+  Serial.println(valTxt);
+  lcd.setCursor(6,3);
+  lcd.print(valTxt);
+ 
+  Serial.println();
   delay(1000);
 }
