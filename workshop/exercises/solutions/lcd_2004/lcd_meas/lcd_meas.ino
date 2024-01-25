@@ -92,7 +92,9 @@ void loop()
   Serial.print("pm 1.0: ");
   Serial.print(valTxt);
   lcd.setCursor(6,2);
-
+  // clear the field
+  lcd.print("    ");
+  lcd.setCursor(6,2);
   lcd.print(valTxt);
 
   // print pm2.5 to the display
@@ -100,12 +102,16 @@ void loop()
   Serial.print(", pm 2.5: ");
   Serial.print(valTxt);
   lcd.setCursor(16,2);
+  lcd.print("    ");
+  lcd.setCursor(16,2);
   lcd.print(valTxt);
 
  // print pm10 to the display
   snprintf(valTxt,5,"%3d",dustMeas.pm10);
   Serial.print(", pm 10: ");
   Serial.println(valTxt);
+  lcd.setCursor(6,3);
+  lcd.print("    ");
   lcd.setCursor(6,3);
   lcd.print(valTxt);
  
