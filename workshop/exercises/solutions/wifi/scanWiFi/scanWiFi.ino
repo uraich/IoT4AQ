@@ -9,7 +9,6 @@
  */
 
 #include <WiFi.h>
-#include <WiFiScan.h>
 
 void setup() {
   Serial.begin(115200);
