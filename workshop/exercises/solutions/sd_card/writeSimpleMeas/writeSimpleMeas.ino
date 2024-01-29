@@ -102,10 +102,11 @@ void setup(){
     Serial.println(dht11.getErrorString(humidity));
   else {  
     measFile.print(timeStamp.c_str());
-    sprintf(measTxt,", Temperature: %d°C, Humidity: %d%% ",temperature,humidity);
+    snprintf(measTxt,100,", Temperature: %d°C, Humidity: %d%% \n",temperature,humidity);
+    measFile.print(measTxt);
     Serial.print(timeStamp.c_str());
     Serial.print(measTxt);
-    Serial.println(" written to file /meas.txt");
+    Serial.print(" written to file /meas.txt");
   }
   measFile.close();
 }
