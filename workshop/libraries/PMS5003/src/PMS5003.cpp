@@ -14,16 +14,12 @@
  * Initializes ESP32 UART2, connected to Rx: GPIO16, Tx: GPIO17
  *
  */
-PMS5003::PMS5003(int rx, int tx)
+PMS5003::PMS5003(int pms_rx, int pms_tx)
 {
   pms5003Msg[0] = firstChar;
   pms5003Msg[1] = secondChar;
-  
-  if ((rx == RX) && (tx == TX))
-    Serial2.begin(9600);
-  else
-    Serial2.begin(9600,SERIAL_8N1,rx,tx);
-  // initialize the array of raw data
+  rx = pms_rx;
+  tx = pms_tx;
   
 }
 
@@ -37,8 +33,9 @@ PMS5003::PMS5003(int rx, int tx)
 
 uint8_t *PMS5003::readRaw()
 {
+  Serial2.begin(9600,SERIAL_8N1,rx,tx);
   uint8_t inChar=0;
-  int count=2;
+
   pms5003MsgPtr = &pms5003Msg[2];
   
   // synchronize by making sure that the first two characters are "BM"
@@ -73,6 +70,7 @@ uint8_t *PMS5003::readRaw()
   }
   Serial.println();
   */
+  Serial2.end();
   return PMS5003::pms5003Msg;
 }
 
@@ -176,12 +174,27 @@ pms5003Data PMS5003::readMeas() {
   // Reads the raw data from the PMS5003 sensor
   // calls verifyChecksum to make sure the message is coherent
   // prints an error message if the checksum check fails
-  // In this case the data are invalid
+  // In this case the data are invalid and the header
+  // in the result structure is set to '\0' '\0'
+  
   uint8_t *rawData = readRaw();
-  if (!verifyChecksum(rawData)) 
+  pms5003Data pms5003Result;
+  pms5003Data *pms5003ResultPtr;
+  
+  if (!verifyChecksum(rawData)) {
     Serial.println("Checksum test failed! The data are invalid!");
+    Serial.print("Checksum calculated: ");
+    Serial.print(calcChecksum(rawData),HEX);
+    Serial.print(", checksum read: ");
+    Serial.println(readChecksum(rawData),HEX);
+    printRaw(rawData);
+    // indicate an error
+    pms5003Result.header[0] = '\0';
+    pms5003Result.header[1] = '\0';
+    return pms5003Result;
+  }
   else {
-    pms5003Data *pms5003Result = evaluate(rawData);
-    return *pms5003Result;
+    pms5003ResultPtr = evaluate(rawData);
+    return *pms5003ResultPtr;
   }    
 }

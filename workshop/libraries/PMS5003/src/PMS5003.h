@@ -74,6 +74,7 @@ private:
   uint8_t secondChar='M';
   uint8_t inchar;
   int     count;
+  int     rx,tx;
 };
 
 #endif

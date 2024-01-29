@@ -8,7 +8,7 @@
  */
 
 #include <PMS5003.h>
-PMS5003 pms5003 = PMS5003(); // initialize the PMS5003 class
+PMS5003 pms5003 = PMS5003(34,33); // initialize the PMS5003 class
 
 void setup() {
   Serial.begin(115200);
