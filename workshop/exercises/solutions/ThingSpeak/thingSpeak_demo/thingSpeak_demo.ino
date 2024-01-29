@@ -27,13 +27,7 @@ void setup() {
   Serial.begin(115200);  //Initialize serial
   while (!Serial); { // wait for serial port to connect.
   }
-
-  if (ssid == "your SSID") {
-    Serial.println("Please modifiy SSID, password and ThingSpeak keys");
-    Serial.println("in secrets.h");
-    while (true)   // wait for reset
-      delay(100);
-    
+  
   WiFi.mode(WIFI_STA);
     // Connect or reconnect to WiFi
   if(WiFi.status() != WL_CONNECTED){
@@ -123,9 +117,9 @@ void loop() {
     snprintf(valTxt,5,"%3d",dustMeas.pm10);
     Serial.print(", pm 10: ");
     Serial.println(valTxt);
+    pm_10 += dustMeas.pm10;
     // end of measurement data
     Serial.println();
-    pm_10 += dustMeas.pm10;
     delay(1000);
   }
   temperature_f = (float)temperature / AVERAGE_OVER;
@@ -170,16 +164,14 @@ void loop() {
   snprintf(valTxt,8,"%5.2f", pm_1_0_f);
   Serial.print("pm 1.0: ");
   Serial.print(valTxt);
-  pm_1_0 += dustMeas.pm1_0;
   
   // print pm2.5 to the serial line
   snprintf(valTxt,8,"%5.2f", pm_2_5_f);
   Serial.print(", pm 2.5: ");
   Serial.print(valTxt);
-  pm_2_5 += dustMeas.pm2_5;
   
   // print pm10 to the serial line
-  snprintf(valTxt,8,"%5.2f", pm_10);
+  snprintf(valTxt,8,"%5.2f", pm_10_f);
   Serial.print(", pm 10: ");
   Serial.println(valTxt);
   Serial.println();
