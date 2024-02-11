@@ -1,7 +1,7 @@
 /**
  * thingSpeak_demo.ino: Connects to the WiFi network and the ThingSpeak server
- * Sends temperature, hunidity and dust concentration measurements
- * to the ThingsSpeak channeel
+ * Sends temperature, humidity and dust concentration measurements
+ * to the ThingsSpeak channel
  *
  * Copyright (c) U. Raich, January 2024
  * This program is part of the IoT4AQ workshop at the 
@@ -70,25 +70,39 @@ void loop() {
   for (int i=0; i<AVERAGE_OVER;i++) {
     // read the temperature
     tmp =  dht11.readTemperature();
-    temperature += tmp;
-    delay(1000);
     
-    // print the DHT measurement results into the result string
-    // first the temperature
-    snprintf(valTxt,3,"%2d",tmp);
-    Serial.print("Temperature: ");
-    Serial.print(valTxt);
-    Serial.println("°C");
+    // check for errors
+    if (tmp == DHT11::ERROR_TIMEOUT)
+      Serial.println("DHT11 Timeout error when reading the temperature. Please check your cabling!");
+    else if  (tmp == DHT11::ERROR_CHECKSUM)
+      Serial.println("DHT11 checksum error when reading the temperature");
+    else {
+      // print the DHT measurement results into the result string
+      // first the temperature
+      snprintf(valTxt,3,"%2d",tmp);
+      Serial.print("Temperature: ");
+      Serial.print(valTxt);
+      Serial.println("°C");
+      // update the temperature sum
+      temperature += tmp;
+    }
+    delay(1000);
     
     // then the humidity
     tmp = dht11.readHumidity();
-    humidity += tmp;
-    snprintf(valTxt,3,"%2d",tmp);
-    Serial.print("Humidity:    ");
-    Serial.print(valTxt);
-    Serial.println("%");
-    //delay(1000);
-    
+    // check for errors
+    if (tmp == DHT11::ERROR_TIMEOUT)
+      Serial.println("DHT11 Timeout error when reading the humidity. Please check your cabling!");
+    else if  (tmp == DHT11::ERROR_CHECKSUM)
+      Serial.println("DHT11 checksum error when reading the humidity");
+    else {    
+      snprintf(valTxt,3,"%2d",tmp);
+      Serial.print("Humidity:    ");
+      Serial.print(valTxt);
+      Serial.println("%");
+      // update the humidity sum
+      humidity += tmp;
+    }
     // finally read the dust sensor
     dustMeas = pms5003.readMeas();
     if (dustMeas.header[0] == '\0') {

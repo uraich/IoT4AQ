@@ -61,22 +61,36 @@ void loop() {
     temperature =  dht11.readTemperature();
     temperature_sum += temperature;
     delay(1000);
+
+    // check for errors
+    if (tmp == DHT11::ERROR_TIMEOUT)
+      Serial.println("DHT11 Timeout error when reading the temperature. Please check your cabling!");
+    else if  (tmp == DHT11::ERROR_CHECKSUM)
+      Serial.println("DHT11 checksum error when reading the temperature");
+    else {    
+      // print the DHT measurement results into the result string
+      // first the temperature
+      snprintf(valTxt,3,"%2d",temperature);
+      Serial.print("Temperature: ");
+      Serial.print(valTxt);
+      Serial.println("°C");
+    }
     
-    // print the DHT measurement results into the result string
-    // first the temperature
-    snprintf(valTxt,3,"%2d",temperature);
-    Serial.print("Temperature: ");
-    Serial.print(valTxt);
-    Serial.println("°C");
-    
-    // then the humidity
     humidity = dht11.readHumidity();
     humidity_sum += humidity;
-    snprintf(valTxt,3,"%2d",humidity);
-    Serial.print("Humidity:    ");
-    Serial.print(valTxt);
-    Serial.println("%");
-    //delay(1000);
+
+    // check for errors
+    if (tmp == DHT11::ERROR_TIMEOUT)
+      Serial.println("DHT11 Timeout error when reading the humidity. Please check your cabling!");
+    else if  (tmp == DHT11::ERROR_CHECKSUM)
+      Serial.println("DHT11 checksum error when reading the humidity");
+    else {       
+      // then the humidity
+      snprintf(valTxt,3,"%2d",humidity);
+      Serial.print("Humidity:    ");
+      Serial.print(valTxt);
+      Serial.println("%");
+    }
     
     // finally read the dust sensor
     dustMeas = pms5003.readMeas();
@@ -158,6 +172,7 @@ void loop() {
   Serial.println(valTxt);
   Serial.println();
   // write the data to the SD card
+
   sdWriteMeas((char *)esp32RTC.getTime("%H:%M:%S %d %b %Y").c_str(),
               temperature_f,humidity_f, pm_1_0_f, pm_2_5_f, pm_10_f);
   

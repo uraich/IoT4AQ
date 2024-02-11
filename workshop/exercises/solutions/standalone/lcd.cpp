@@ -52,13 +52,23 @@ void lcdWriteTimeStamp(char * timeStamp) {
 void lcdWriteMeas(int temperature, int humidity,
 		  int pm_1_0, int pm_2_5, int pm_10) {
   char valTxt[10];
+  // check if temperature value is reasonable
+  // we get 254 when checksum error, 253 when timeout
+  if (temperature > 60) 
+    strcpy(valTxt,"??");
+  else
   // write the temperature
-  snprintf(valTxt,3,"%2d",temperature);
+    snprintf(valTxt,3,"%2d",temperature);
+
   lcd.setCursor(6,1);
   lcd.print(valTxt);
 
   // write the humidity
-  snprintf(valTxt,3,"%2d",humidity);
+  if (humidity > 100) 
+    strcpy(valTxt,"??");
+  else  
+    snprintf(valTxt,3,"%2d",humidity);
+
   lcd.setCursor(17,1);
   lcd.print(valTxt);
   
