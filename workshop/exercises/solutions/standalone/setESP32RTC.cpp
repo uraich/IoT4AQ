@@ -1,4 +1,4 @@
-/* setESP32RTC.cpp: Reads the time form the DS1307 and sets the 
+/* setESP32RTC.cpp: Reads the time form the DS3231 and sets the 
  * ESP32 RTC
  * Copyright (c) U. Raich, Jan. 2024
  * This program is part of the IoT4AQ workshop held at the 
@@ -10,30 +10,30 @@
 extern ESP32Time esp32RTC;
 
 void setESP32RTC(void) {
-  RTC_DS1307 ds1307;
+  RTC_DS3231 ds3231;
   DateTime now;
 
-    // check if ds1307 is connected and accessible
-  if (!ds1307.begin()) {
-    Serial.println("Could not find ds1307 on the I2C bus");
+    // check if ds3231 is connected and accessible
+  if (!ds3231.begin()) {
+    Serial.println("Could not find ds3231 on the I2C bus");
     Serial.println("Please check the wiring");
     while (true)
       delay(100); // wait for correction and reset
   }  
-  if (!ds1307.isrunning()) {
-    Serial.println("DS1307 Oscillator is switched off");
-    Serial.println("Please run a program to set the DS1307, which switches the oscillator on");
+  if (ds3231.lostPower()) {
+    Serial.println("DS3231 Oscillator is or was switched off");
+    Serial.println("Please run a program to set the DS3231, which switches the oscillator on");
     while (true)
       delay(100);
   }
-  // get the time from the ds1307 using the RTClib now() method
+  // get the time from the ds3231 using the RTClib now() method
   // this returns a DateTime object which can be printed using the
   // toString() method
   
-  now = ds1307.now();
+  now = ds3231.now();
   char timeFormat[] = "DDD DD.MMM YYYY hh:mm:ss";
   
-  Serial.print("The current date and time on the DS1307: ");
+  Serial.print("The current date and time on the DS3231: ");
   Serial.println(now.toString(timeFormat));
   Serial.println("Setting the ESP32 RTC with this time");
   esp32RTC.setTime((int) now.second(),

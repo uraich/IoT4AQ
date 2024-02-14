@@ -172,9 +172,10 @@ void loop() {
   Serial.println(valTxt);
   Serial.println();
   // write the data to the SD card
-
+ 
   sdWriteMeas((char *)esp32RTC.getTime("%H:%M:%S %d %b %Y").c_str(),
               temperature_f,humidity_f, pm_1_0_f, pm_2_5_f, pm_10_f);
   
+ 
   delay(3000);
 }
