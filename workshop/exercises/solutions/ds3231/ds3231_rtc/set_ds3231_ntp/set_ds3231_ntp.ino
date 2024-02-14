@@ -18,8 +18,8 @@
 #include <Wire.h>
 #include "time.h"
 
-const char* ssid     = "WLAN18074253";
-const char* password = "Q4k6V35sFauw";
+const char* ssid     = "your SSID";
+const char* password = "your password";
 
 const char* ntpServer = "pool.ntp.org";
 
@@ -60,6 +60,11 @@ void setup(){
     delay(10);
 
   // Connect to Wi-Fi
+  if (ssid == "your SSID") {
+    Serial.println("Please setup your SSID and password and re-run the program");
+    while (true)
+      delay(100); // wait for reset    
+  }
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.begin(ssid, password);
