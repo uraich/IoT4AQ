@@ -1,5 +1,5 @@
 /* 
- * float2string.ino: Converting floats to strings
+ * number2string.ino: Converting integers and floats to strings
  * This may be needed for the LCD display
  * 
  * Copyright (c) U. Raich) Feb. 2024
