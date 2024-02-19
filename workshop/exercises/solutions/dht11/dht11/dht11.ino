@@ -12,13 +12,12 @@
 #include <DHT11.h>
 
 // Create an instance of the DHT11 class.
-// - For Arduino: Connect the sensor to Digital I/O Pin 2.
-// - For ESP32: On my WeMos D1 mini ESP32 board the DHT11 data line is connected to GPIO 22
-// - For ESP8266: Connect the sensor to GPIO2 or D4.
+// - For ESP32: On my WeMos D1 mini ESP32 board the DHT11 data line is connected to GPIO 16
+// - For the workshop we use GPIO 15
 
 #define DHT11_DATALINE 16
 
-DHT11 dht11(DHT11_DATALINE);
+DHT11 dht11(DHT11_DATALINE); // this is a global variable
 
 void setup()
 {
