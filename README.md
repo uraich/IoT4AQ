@@ -26,6 +26,5 @@ The MicroPython code for the all demonstrations shown during the presentation ar
 The sht3x driver is already included in the MicroPython firmware I use and can therefore be accessed without further actions. The other drivers must be made availabe to the system by copying them into the /lib folder of the MicroPython file system.
 
 # The IoT4AQ hands-on workshop
-During this workshop a simple but fully functional IoT system for air quality measurements is developed. First the individual components are presented and small readout and control programs are developed for them. Finally these code pieces are assembled into a fully functional system.
-# This material has been rejected by the course organizer. The new version is available here:
+The slides and a demo program shown duting the workshop are available here:
 [Workshop on Air Quality and IoT based Air Sensors](https://github.com/uraich/IoT4AQ_B) 
