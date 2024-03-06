@@ -1,3 +1,13 @@
+/* 
+ * hello_world.ino: Demonstrates basic string handling functions
+ * and some pointer handling
+ *
+ * Copyright (c) U. Raich) Feb. 2024
+ * This program is part ot the IoT4AQ workshop held in March 2024 at
+ * the University Alioune Diop, Bambey, Sénégal
+ * It is released under the MIT license
+ */
+
 void setup() {
   Serial.begin(115200);
   if (!Serial)
@@ -8,7 +18,7 @@ void loop() {
   char hello[] = "Hello World!";
   char *helloPtr = hello;
   char bye[]   = "Good Bye World!";
-  char hello2[100]; // we do not know yet how much space we will needd
+  char hello2[100]; // we do not know yet how much space we will need
                     // we therefore make the array simply big enough
   Serial.print("Print the full string");
   Serial.println(hello);
@@ -41,12 +51,12 @@ void loop() {
   else
     Serial.println("hello and bye are different");  
 
-  helloPtr = hello2; // point to the first character of hello2
+  helloPtr = hello2;           // point to the first character of hello2
   Serial.print("First character of hello2: ");
   Serial.println(*helloPtr++); // print the first character of hello2 which is 'H'
                                // increment the pointer, it now points to 'e'
   Serial.print("Second character of hello2: ");
-  Serial.println(*helloPtr);    // we print the second character but do not increment the pointer
+  Serial.println(*helloPtr);   // we print the second character but do not increment the pointer
                                // it still points to 'e'
   *helloPtr = 'a';             // now we write 'a' to the location where hellePtr points to
                                // overwriting the 'e' by a 'a'
