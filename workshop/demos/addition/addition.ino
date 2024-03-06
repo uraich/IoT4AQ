@@ -1,3 +1,13 @@
+/* 
+ * addition.ino: A very basic Arduino program adding 2 numbers and printing
+ * the result 
+ * 
+ * Copyright (c) U. Raich) Feb. 2024
+ * This program is part ot the IoT4AQ workshop held in March 2024 at
+ * the University Alioune Diop, Bambey, Sénégal
+ * It is released under the MIT license
+ */
+
 void setup() {
   Serial.begin(115200); // start the serial line at 115200 baud
   if (!Serial)
