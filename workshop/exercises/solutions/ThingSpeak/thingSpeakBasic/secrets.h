@@ -3,11 +3,10 @@
  * The ThingSpeak channel ID
  * the API key
  */
-// const char* ssid     = "your SSID";
-const char* ssid     = "WLAN18074253";
-const char* password = "Q4k6V35sFauw";
+const char* ssid     = "your SSID";
+const char* password = "your password";
 
-const unsigned long channel_ID = 2413223;
-const char *API_write_key      = "M0RGADVLMO70MOV8";
-const char *API_read_key       = "L50OJEM2R7GSK9KT";
-const char *API_user_key       = "N8UZNDYEFLEKTOAS";
+const unsigned long channel_ID = your_channel_no;
+const char *API_write_key      = "your API write key";
+const char *API_read_key       = "your API read key";
+const char *API_user_key       = "your API user key";

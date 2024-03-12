@@ -8,7 +8,7 @@
  * License: MIT
  */
 
-#ifndef PMS5004_h
+#ifndef PMS5003_h
 #define PMS5003_h
 
 #include "Arduino.h"
