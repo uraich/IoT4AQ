@@ -1,5 +1,5 @@
 /**
- * writeSimpleFile.ino: writes temperature and humidity measurement data 
+ * writeSimpleMeas.ino: writes temperature and humidity measurement data 
  * to a file on the SD card
  * The file resides on the root directory of the SD card and is named meas.txt
  * If the file exists, the simulated measurement data are appended
