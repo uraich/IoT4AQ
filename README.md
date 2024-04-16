@@ -1,6 +1,6 @@
 # IoT4AQ
 ## Slides and demonstration programs for the Seminar on Air Quality and IoT based Air Sensors
-On 7. and 8. November 2023 an online [Seminar on Air Quality and IoT based Air Sensors](https://indico.cern.ch/event/1316999/page/30572-iot4aq-project) will be held. 
+On 7. and 8. November 2023 an online [Seminar on Air Quality and IoT based Air Sensors](https://indico.cern.ch/event/1316999/page/30572-iot4aq-project) was held. 
 This repository contains slides of a tutorial on the Internet of Things in general and its application to air quality measurements in particular.  
 
 The slides are available as LibreOffice odp documents as well as PDF files.
